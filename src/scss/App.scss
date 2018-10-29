@@ -1,0 +1,10 @@
+// import and set variables here //
+$background-color: #444;
+$background-color-darker: #333;
+$font-color: #ddd;
+$primary-color: #e0b649;
+
+@import 'elements';
+@import 'result';
+@import 'search';
+@import 'sidebar';
