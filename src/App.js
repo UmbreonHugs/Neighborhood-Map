@@ -8,11 +8,12 @@ import './App.css';
 class App extends Component {
   state = {
     selectedRestaurant: [],
-    locations: locations
+    locations: locations,
+    locationMap: locations.location
   }
   componentDidMount() {
     //this.fetchRestaurant();
-    console.log(this.state.locations)
+    console.log(locations)
   }
   fetchRestaurant = () => {
     FoursquareAPI.getRestaurant().then((response) => {this.setState({selectedRestaurant: response})})
@@ -29,7 +30,7 @@ class App extends Component {
           </div>
           <Search locations={locations} />
         </nav>
-        <Map />
+        <Map locations={locations} />
       </div>
     );
   }

@@ -1,6 +1,11 @@
 import React from 'react';
 import L from 'leaflet';
+import PropTypes from 'prop-types'
+
 class Map extends React.Component {
+  static propTypes = {
+    locations: PropTypes.array.isRequred
+  }
   componentDidMount() {
     // create map
     this.map = L.map('map', {
@@ -12,6 +17,9 @@ class Map extends React.Component {
         }),
       ]
     });
+    this.props.locations.map(location => {
+      L.marker([location.location.lat, location.location.lng]).addTo(this.map).bindPopup(location.name).openPopup();;
+    })
   }
   render() {
     return <div id="map"></div>

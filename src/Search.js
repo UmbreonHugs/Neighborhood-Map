@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import escapeRegExp from 'escape-string-regexp'
 import PropTypes from 'prop-types'
-
+import { map } from './Map';
 class Search extends Component {
   static propTypes = {
     locations: PropTypes.array.isRequred
@@ -19,7 +19,8 @@ class Search extends Component {
     let searchedLocation;
     if (query) {
       const match = new RegExp(escapeRegExp(query), 'i')
-      searchedLocation = locations.filter((location) => match.test(location.name))
+      searchedLocation = locations.filter((location) => match.test(location.name) || match.test(location.tags))
+      // update location state
     } else {
       searchedLocation = locations
     }
