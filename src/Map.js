@@ -19,7 +19,7 @@ class Map extends React.Component {
       ]
     });
     this.props.locations.map(location => {
-      L.marker([location.location.lat, location.location.lng]).addTo(this.map).bindPopup().openPopup();;
+      L.marker([location.location.lat, location.location.lng]).addTo(this.map).bindPopup().openPopup();
     })
   }
   render() {

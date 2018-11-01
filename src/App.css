@@ -7,7 +7,7 @@ body {
   padding: 0;
   margin: 0; }
 
-html, body, #map {
+html, body, .leaflet-container {
   width: 100%; }
 
 .results li {
