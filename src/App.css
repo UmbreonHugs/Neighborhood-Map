@@ -14,6 +14,10 @@ html, body, .leaflet-container {
   padding: 15px;
   border-bottom: 1px solid #555; }
 
+/* see https://codeburst.io/tutorial-make-a-bouncing-ball-entirely-with-css-1e7e3c853a50 */
+.selected-map {
+  animation: zoominoutsinglefeatured 1s infinite; }
+
 .search-form {
   border-radius: 0;
   border: 0;
@@ -22,6 +26,9 @@ html, body, .leaflet-container {
   font-size: 22px;
   height: 52px;
   font-weight: 300; }
+
+.popup-content {
+  width: 360px; }
 
 .sidebar {
   background-color: #444;

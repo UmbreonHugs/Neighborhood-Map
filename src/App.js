@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as FoursquareAPI from './FoursquareAPI';
 import escapeRegExp from 'escape-string-regexp'
-import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
+import { Map, TileLayer, Marker, Popup, Tooltip } from 'react-leaflet';
 import { locations } from './restaurantList'
 import MapDetail from './MapDetail'
 import './App.css';
@@ -13,9 +13,16 @@ class App extends Component {
     locationMap: locations.location,
     query: '',
     result: [],
-    noResult: true
+    noResult: true,
+    selected: false,
+    markerHighlight: ''
   }
 
+  selectLocation = (id) => {
+    this.setState({ markerHighlight: id })
+    Map.openPopup('test');
+    console.log(this.state.markerHighlight)
+  }
   updateQuery = (query) => {
     this.setState({ query })
     if (query) {
@@ -31,55 +38,57 @@ class App extends Component {
         this.setState({result: [], noResult: true})
       }
     }
+  updateSelectedRestaurant = (data) => {
+    this.setState({selectedRestaurant: data})
+  }
   fetchRestaurant = () => {
     FoursquareAPI.getRestaurant().then((response) => {this.setState({selectedRestaurant: response})})
     // console.log(this.state.selectedRestaurant.venue)
   }
   render() {
-    const { selectedRestaurant, locations, query, result, noResult } = this.state
+    const { selectedRestaurant, locations, query, result, noResult, selected } = this.state
     return (
       <div className="App">
-        <nav class="sidebar">
-          <div class="sidebar-header">
-            <h1 class="logo">Downtown Tracy Eats</h1>
+        <nav className="sidebar">
+          <div className="sidebar-header">
+            <h1 className="logo">Downtown Tracy Eats</h1>
             <p></p>
           </div>
-          <input type="text" class="form-control search-form" placeholder="Search" value={query}
+          <input type="text" className="form-control search-form" placeholder="Search" value={query}
               onChange={(event) => this.updateQuery(event.target.value)} />
             {result.length > 0 && (
-            <ul class="list-unstyled components results">
+            <ul className="list-unstyled components results">
               {result.map((location) => (
               <li key={location.foursquareId}>{location.name}</li>
               ))}
             </ul>
           )}
           {noResult &&
-            <ul class="list-unstyled components results">
+            <ul className="list-unstyled components results">
               {locations.map((location) =>
-                <li key={location.foursquareId}>{location.name}</li>
+                <li key={location.foursquareId}><a href="#" onClick={(event) => this.selectLocation(location.foursquareId)}>{location.name}</a></li>
               )}
             </ul>
             }
         </nav>
         <Map
           center={[37.7383176, -121.4291585]}
-          onClick={this.addMarker}
           zoom={16}
           >
           <TileLayer
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
           />
-        {this.state.result.map((location) =>
-          <Marker key={`marker-${location.foursquareId}`} position={location.location}>
-          <Popup>
+        {result.map((location) =>
+          <Marker key={`marker-${location.foursquareId}`} id={`marker-${location.foursquareId}`} position={location.location}>
+          <Popup className="popup-content" id={location.foursquareId}>
             <MapDetail />
           </Popup>
         </Marker>
         )}
-        {noResult && this.state.locations.map((location) =>
-          <Marker key={`marker-${location.foursquareId}`} position={location.location}>
-          <Popup>
+        {noResult && locations.map((location) =>
+          <Marker key={`marker-${location.foursquareId}`} id={`marker-${location.foursquareId}`} position={location.location}>
+          <Popup className="popup-content" id={location.foursquareId} key={`popup-${location.foursquareId}`} open="true">
             <MapDetail />
           </Popup>
         </Marker>
