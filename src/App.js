@@ -20,7 +20,7 @@ class App extends Component {
 
   selectLocation = (id) => {
     this.setState({ markerHighlight: id })
-    Map.openPopup('test');
+    Map.openPopup(id);
     console.log(this.state.markerHighlight)
   }
   updateQuery = (query) => {
