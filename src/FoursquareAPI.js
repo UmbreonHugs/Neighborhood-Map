@@ -4,8 +4,7 @@ const CLIENT_ID = '0MUOG0YZ2VWLO0V1IAFNK25DGVQXPOFNJWT23BO5MRZN5GIK'
 const CLIENT_SECRET = '011BXBI1ENW1UME1C52BKCQRC4WS4SUW4GVM4GNC0LUBS0O3'
 const VERSION = '20181029'
 
-export const getRestaurant = () =>
-// fetch(`${url}/v2/venues/4b8016ccf964a520145130e3?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=${VERSION}`)
-    fetch('https://api.foursquare.com/v2/venues/4b8016ccf964a520145130e3?client_id=0MUOG0YZ2VWLO0V1IAFNK25DGVQXPOFNJWT23BO5MRZN5GIK&client_secret=011BXBI1ENW1UME1C52BKCQRC4WS4SUW4GVM4GNC0LUBS0O3&v=20181029')
+export const getRestaurant = (id) =>
+    fetch(`${url}/v2/venues/${id}?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=${VERSION}`)
+//    fetch('https://api.foursquare.com/v2/venues/4b8016ccf964a520145130e3?client_id=0MUOG0YZ2VWLO0V1IAFNK25DGVQXPOFNJWT23BO5MRZN5GIK&client_secret=011BXBI1ENW1UME1C52BKCQRC4WS4SUW4GVM4GNC0LUBS0O3&v=20181029')
     .then(res => res.json())
-    .then(data => data)

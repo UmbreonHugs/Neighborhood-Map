@@ -1,20 +1,25 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class MapDetail extends Component {
+  static propTypes = {
+    location: PropTypes.object.isRequred
+  }
   render() {
+    const { location } = this.props
     return (
       <div>
-      <h1>Title</h1>
+      <h3>{location.name}</h3>
       <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
           <div class="carousel-inner">
             <div class="carousel-item active">
-              <img class="d-block w-100" src="https://via.placeholder.com/350" alt="First slide" />
+              <img class="d-block w-100" src="https://via.placeholder.com/250" alt="First slide" />
             </div>
             <div class="carousel-item">
-              <img class="d-block w-100" src="https://via.placeholder.com/350" alt="Second slide" />
+              <img class="d-block w-100" src="https://via.placeholder.com/250" alt="Second slide" />
             </div>
             <div class="carousel-item">
-              <img class="d-block w-100" src="https://via.placeholder.com/350" alt="Third slide" />
+              <img class="d-block w-100" src="https://via.placeholder.com/250" alt="Third slide" />
             </div>
           </div>
           <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
@@ -26,7 +31,7 @@ class MapDetail extends Component {
             <span class="sr-only">Next</span>
           </a>
         </div>
-        <p>Address</p>
+        <p className="lead">{location.address}</p>
       </div>
     )
   }
