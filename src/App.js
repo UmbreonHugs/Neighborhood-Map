@@ -6,30 +6,47 @@ import { locations } from './restaurantList'
 import MapDetail from './MapDetail'
 import './App.css';
 
+
+// Rule: alertMessage must be cleared after resets
 class App extends Component {
+  /*
+    ****State Contents****
+        selectedRestaurant: data from a selected restaurant, for marker selection; object
+        selectedRestaurantInfo: data from a selected restaurant, for popup info; object
+        loaded: Logical statement to check if selectedRestaurantInfo is LOADED; boolean
+        locations: Lists all locations available in the map; array
+        locationMap: Lists ONLY the GPS cordinates for all locations; array
+        query: Search Query; string
+        result: Search Result; array
+        noResult: Check if user is searching for a restaurant; boolean
+        selected: Check if a selection is made; boolean
+        currentPosition: Set the current position of the map (downtown Tracy); array
+        alertType: Alert type (success, error, warning, info); string
+        alertMessage: Alert message/detail; string
+  */
   state = {
     selectedRestaurant: {},
     selectedRestaurantInfo: {},
+    loaded: false,
     locations: locations,
     locationMap: locations.location,
     query: '',
     result: [],
     noResult: true,
     selected: false,
-    markerHighlight: '',
     currentPosition: [37.7383176, -121.4291585],
     alertType: '',
     alertMessage: ''
   }
-
-  selectLocation = (id) => {
-    this.setState({ markerHighlight: id })
-    Map.openPopup(id);
-    console.log(this.state.markerHighlight)
-  }
+  // Reset the map marker selection
   resetMap = () => {
-    this.setState({ selected: false })
+    this.setState({ selected: false, alertMessage: '' })
   }
+  // Reset the Selected Restaurant Info
+  resetSelection = () => {
+    this.setState({ selectedRestaurantInfo: {}, loaded: false, alertMessage: '' })
+  }
+  // Update the search query and search for restaurants
   updateQuery = (query) => {
     this.setState({ query })
     if (query) {
@@ -45,25 +62,52 @@ class App extends Component {
         this.setState({result: [], noResult: true, selected: false})
       }
     }
+  // Updates the marker selection down to a specific restaurant, then centers the map towards that marker
   updateSelectedRestaurant = (data) => {
     this.setState({selectedRestaurant: data, selected: true, currentPosition: data.location}, () => {console.log(this.state.selectedRestaurant)})
-    console.log(data.location)
   }
+  // Fetch the restaurant via Foursquare API
   fetchRestaurant = (id) => {
-    FoursquareAPI.getRestaurant(id).then((res) => {this.setState({selectedRestaurantInfo: res})})
+    FoursquareAPI.getRestaurant(id)
+    .then((res) => {this.setState({selectedRestaurantInfo: res})})
+    .then((res) => {
+      if (!res) {
+        // failed
+        this.setState({loaded: false, alertType: 'error', alertMessage: 'Unable to fetch FourSquare Info, check console log for more information'})
+      } else {
+        // its loaded, set state so content can load
+        this.setState({loaded: true})
+      }
+    })
   }
   getInfo() {
     console.log(this.state.selectedRestaurantInfo.response.venue.name);
   }
   render() {
-    const { selectedRestaurant, locations, query, result, noResult, selected, currentPosition } = this.state
+    const { selectedRestaurant, locations, query, result, noResult, selected, currentPosition, selectedRestaurantInfo, loaded, alert, alertMessage } = this.state
+    let mapInfo;
+    // if we have data loaded, then lets get the details :D
+    if (loaded) {
+      mapInfo = (
+        <MapDetail foursquareInfo={selectedRestaurantInfo} />
+      )
+    } else {
+      // no data inserted, then its either loading, or has an error. Display it to the user
+      let message;
+      if (alertMessage) {
+        message = alertMessage
+      } else {
+        message = "Loading..."
+      }
+      mapInfo = (
+        <p>{message}</p>
+      )
+    }
     return (
       <div className="App">
         <nav className="sidebar">
           <div className="sidebar-header">
             <h1 className="logo">Downtown Tracy Eats</h1>
-            <a href="#" onClick={(event) => this.fetchRestaurant('5704519d498e87cf57eb55d5')}>Fetch Restaurant</a>
-            <a href="#" onClick={(event) => this.getInfo()}>Info</a>
           </div>
           <input type="text" className="form-control search-form" placeholder="Search" value={query}
               onChange={(event) => this.updateQuery(event.target.value)} onClick={(event) => this.resetMap()}/>
@@ -81,6 +125,11 @@ class App extends Component {
               )}
             </ul>
             }
+            {result.length === 0 && !noResult && (
+              <ul className="list-unstyled components results">
+              <li>No results</li>
+              </ul>
+          )}
         </nav>
         <Map
           center={currentPosition}
@@ -91,24 +140,24 @@ class App extends Component {
           url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
           />
         {!selected && result.map((location) =>
-          <Marker key={`marker-${location.foursquareId}`} id={`marker-${location.foursquareId}`} position={location.location}>
-          <Popup className="popup-content" id={location.foursquareId}>
-            <MapDetail location={location} />
+          <Marker key={`marker-${location.foursquareId}`} id={`marker-${location.foursquareId}`} position={location.location} onClick={(event) => this.fetchRestaurant(location.foursquareId)}>
+          <Popup className="popup-content" id={location.foursquareId} key={`popup-${location.foursquareId}`}>
+            { mapInfo }
           </Popup>
         </Marker>
         )}
         {!selected && noResult && locations.map((location) =>
-          <Marker key={`marker-${location.foursquareId}`} id={`marker-${location.foursquareId}`} position={location.location}>
-          <Popup className="popup-content" id={location.foursquareId} key={`popup-${location.foursquareId}`} open="true">
-            <MapDetail location={location} />
+          <Marker key={`marker-${location.foursquareId}`} id={`marker-${location.foursquareId}`} position={location.location} onClick={(event) => this.fetchRestaurant(location.foursquareId)} onPopupclose={(event) => this.resetSelection()}>
+          <Popup className="popup-content" id={location.foursquareId} key={`popup-${location.foursquareId}`}>
+            { mapInfo }
           </Popup>
         </Marker>
         )}
         {selected && Object.keys(selectedRestaurant).map(() =>
-          <Marker position={selectedRestaurant.location}>
-            <Popup className="popup-content" id={selectedRestaurant.foursquareId} open="true">
-            <MapDetail location={selectedRestaurant}/>
-            </Popup>
+          <Marker position={selectedRestaurant.location} onClick={(event) => this.fetchRestaurant(selectedRestaurant.foursquareId)}>
+          <Popup className="popup-content" id={selectedRestaurant.foursquareId} key={`popup-${selectedRestaurant.foursquareId}`}>
+            { mapInfo }
+          </Popup>
           </Marker>
         )}
         </Map>
