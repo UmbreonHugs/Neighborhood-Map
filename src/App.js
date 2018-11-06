@@ -70,13 +70,12 @@ class App extends Component {
   fetchRestaurant = (id) => {
     FoursquareAPI.getRestaurant(id)
     .then((res) => {this.setState({selectedRestaurantInfo: res})})
-    .then((res) => {
-      if (!res) {
-        // failed
-        this.setState({loaded: false, alertType: 'error', alertMessage: 'Unable to fetch FourSquare Info, check console log for more information'})
+    .then(res => {
+      if (this.state.selectedRestaurantInfo) {
+        this.setState({loaded: true})
       } else {
         // its loaded, set state so content can load
-        this.setState({loaded: true})
+        this.setState({loaded: false, alertType: 'error', alertMessage: 'Unable to fetch FourSquare Info, check console log for more information'})
       }
     })
   }
