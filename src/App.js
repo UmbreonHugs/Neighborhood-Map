@@ -64,7 +64,7 @@ class App extends Component {
     }
   // Updates the marker selection down to a specific restaurant, then centers the map towards that marker
   updateSelectedRestaurant = (data) => {
-    this.setState({selectedRestaurant: data, selected: true, currentPosition: data.location}, () => {console.log(this.state.selectedRestaurant)})
+    this.setState({selectedRestaurant: data, selected: true, loaded: false, currentPosition: data.location}, () => {console.log(this.state.selectedRestaurant)})
   }
   // Fetch the restaurant via Foursquare API
   fetchRestaurant = (id) => {
@@ -84,6 +84,7 @@ class App extends Component {
   }
   render() {
     const { selectedRestaurant, locations, query, result, noResult, selected, currentPosition, selectedRestaurantInfo, loaded, alert, alertMessage } = this.state
+    console.log(locations)
     let mapInfo;
     // if we have data loaded, then lets get the details :D
     if (loaded) {
