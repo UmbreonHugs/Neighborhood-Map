@@ -48,6 +48,13 @@ class App extends Component {
   resetSelection = () => {
     this.setState({ selectedRestaurantInfo: {}, loaded: false, alertMessage: '' })
   }
+  // Throw Error Message function
+  throwError = (string) => {
+    this.setState({alertType: "error", alertMessage: string})
+  }
+  closeError = () => {
+    this.setState({alertType: "", alertMessage: ""})
+  }
   // toggle sidebar
   toggleSidebar = () => {
     if (this.state.sidebar) {
@@ -85,7 +92,7 @@ class App extends Component {
     })
   }
   render() {
-    const { selectedRestaurant, sidebar, locations, query, result, noResult, selected, currentPosition, selectedRestaurantInfo, loaded, alertMessage } = this.state
+    const { selectedRestaurant, alertType, sidebar, locations, query, result, noResult, selected, currentPosition, selectedRestaurantInfo, loaded, alertMessage } = this.state
     let mapInfo;
     // if we have data loaded, then lets get the details :D
     if (loaded) {
@@ -106,6 +113,12 @@ class App extends Component {
     }
     return (
       <div>
+        {alertType === "error" && (
+        <div class="alert-error">
+          <button onClick={(event) => this.closeError()}>close</button>
+          {alertMessage}
+        </div>
+        )}
         {!sidebar && (
         <button type="button" className="btn btn-outline-dark map-toggle" tabIndex="1" onClick={(event) => this.toggleSidebar()}>Toggle Menu</button>
         )}
@@ -120,14 +133,14 @@ class App extends Component {
             {result.length > 0 && (
             <ul className="list-unstyled components results">
               {result.map((location) => (
-              <li key={location.foursquareId}><button tabIndex="2" onClick={(event) => this.updateSelectedRestaurant(location)}>{location.name}</button></li>
+              <li key={location.foursquareId} role="link"><button tabIndex="2" onClick={(event) => this.updateSelectedRestaurant(location)}>{location.name}</button></li>
               ))}
             </ul>
           )}
           {noResult &&
             <ul className="list-unstyled components results">
               {locations.map((location) =>
-                <li key={location.foursquareId}><button tabIndex="2" onClick={(event) => this.updateSelectedRestaurant(location)}>{location.name}</button></li>
+                <li key={location.foursquareId} role="link"><button tabIndex="2" onClick={(event) => this.updateSelectedRestaurant(location)}>{location.name}</button></li>
               )}
             </ul>
             }
@@ -143,11 +156,13 @@ class App extends Component {
           zoom={16}
           onClick={(event) => this.resetMap()}
           zoomControl={false}
+          ontileerror={(event) => this.throwError('Error loading map tiles! Please check your internet connection.')}
+          role="application"
           >
           <ZoomControl position="topright"/>
           <TileLayer
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+          url='http://{s}.tile.osm.org/{z}/{x}/{y}.png' ontileerror={(event) => this.throwError('Error loading map tiles! Please check your internet connection.')}
           />
         {!selected && result.map((location) =>
           <Marker key={`marker-${location.foursquareId}`} id={`marker-${location.foursquareId}`} position={location.location} onClick={(event) => this.fetchRestaurant(location.foursquareId)}>

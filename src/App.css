@@ -8,6 +8,27 @@ html, body, .leaflet-container {
   position: relative;
   overflow: hidden; }
 
+.alert-error {
+  position: absolute;
+  z-index: 101000;
+  top: 10px;
+  right: 50px;
+  background-color: rgba(126, 28, 28, 0.75);
+  color: #fff;
+  width: 340px;
+  padding: 10px;
+  border-radius: 10px; }
+
+.alert-error button {
+  background-color: transparent;
+  margin-right: 10px;
+  color: #fff;
+  padding: 2px 6px;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px; }
+
 .btn-outline-primary {
   color: #e0b649;
   border-color: #e0b649; }
