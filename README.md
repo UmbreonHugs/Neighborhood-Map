@@ -23,5 +23,5 @@ https://umbreonhugs.github.io/neighborhood-map-live/
 - Uses FourSquare to gather data and useful information about the restaurants (https://foursquare.com) and its API
 
 ## Credits
-- PostMan for helping me understand the JSON structure for the FourSquare API (https://www.getpostman.com/)
+- Postman for helping me understand the JSON structure for the FourSquare API (https://www.getpostman.com/)
 - Thank you for the amazing help, documentation, and support from the Udacity Team and its mentors! :)
