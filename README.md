@@ -6,13 +6,17 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ##Description
 This is a single page application that is designed to map some of the best places to eat in Downtown Tracy. To use the app, search for a restaurant or type of cuisine (thai, coffee, bars, .ect) and it will show the results and map them
 
-## Requirements (for dev)
+## Requirements (for development)
 In order to install this project on your machine, you **must have Node.js installed on your machine**. If you do not have Node.js installed, you may install it [here](https://nodejs.org/en/).
 
-## Installation and Usage (for dev)
+## Installation and Usage (for development)
 1. **Clone the repository** onto your PC. You can do so by running this command: `git clone https://github.com/UmbreonHugs/Neighborhood-Map.git`
 2. **Once cloned, install the dependencies required for the project.** You can do so by navigating to the index of the project, and running this command: `npm install`. This process will take several minutes.
 3. **Launch the application once the dependencies are installed.** This can be done by running this command: `npm start`. A new browser window should open up, pointing to http://localhost:3000
+
+## Build and Deployment
+1. To build the project for production, run the command, `npm build` or `yarn build`.
+2. Once the project is finished building, upload the files in the `/build` directory onto a server or GH Pages.
 
 # Live Preview
 https://umbreonhugs.github.io/neighborhood-map-live/
