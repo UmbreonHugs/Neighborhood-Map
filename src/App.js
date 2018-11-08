@@ -115,7 +115,7 @@ class App extends Component {
           <div className="sidebar-header">
             <h1 className="logo">Downtown Tracy Eats</h1>
           </div>
-          <input type="text" className="form-control search-form" placeholder="Search" tabIndex="1" value={query}
+          <input type="text" className="form-control search-form" role="search" placeholder="Search" tabIndex="1" value={query}
               onChange={(event) => this.updateQuery(event.target.value)} onClick={(event) => this.resetMap()}/>
             {result.length > 0 && (
             <ul className="list-unstyled components results">
