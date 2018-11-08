@@ -1,18 +1,55 @@
-.App {
-  display: flex;
-  align-items: stretch; }
-
 body {
   font-size: 18px;
   padding: 0;
   margin: 0; }
 
 html, body, .leaflet-container {
-  width: 100%; }
+  height: 969px;
+  position: relative;
+  overflow: hidden; }
+
+.btn-outline-primary {
+  color: #e0b649;
+  border-color: #e0b649; }
+
+a {
+  color: #e0b649; }
+
+/* lets make the website stand out~ */
+::selection {
+  background: #e0b649;
+  color: #222; }
+
+::-moz-selection {
+  background: #e0b649;
+  color: #222; }
+
+.sidebar::-webkit-scrollbar {
+  width: 0.4em;
+  background-color: #333; }
+
+.sidebar::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3); }
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: #e0b649; }
 
 .results li {
   padding: 15px;
   border-bottom: 1px solid #555; }
+
+.results li button {
+  color: #ddd;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  display: block;
+  margin: 0;
+  padding: 0; }
+
+.results li button:hover, .results li button:focus {
+  text-decoration: underline;
+  color: #e0b649; }
 
 /* see https://www.w3schools.com/howto/howto_css_loader.asp */
 .loader {
@@ -47,13 +84,26 @@ html, body, .leaflet-container {
 .leaflet-fade-anim .leaflet-popup {
   transition: none; }
 
+@media (max-width: 740px) {
+  .popup-content {
+    width: 300px; } }
+
 .sidebar {
-  background-color: #444;
-  min-width: 320px;
-  max-width: 320px;
+  background-color: rgba(50, 50, 50, 0.9);
+  position: absolute;
+  width: 300px;
   color: #ddd;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: auto;
   z-index: 1000; }
+
+.off {
+  display: none; }
+
+.map-toggle {
+  position: absolute;
+  top: 0;
+  z-index: 999; }
 
 .logo {
   font-size: 32px;
@@ -61,3 +111,8 @@ html, body, .leaflet-container {
   color: #e0b649;
   text-align: center;
   padding: 10px; }
+
+@media (max-width: 740px) {
+  .sidebar {
+    background-color: rgba(50, 50, 50, 0.9);
+    width: 210px; } }

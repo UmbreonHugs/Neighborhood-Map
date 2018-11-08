@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as FoursquareAPI from './FoursquareAPI';
 import escapeRegExp from 'escape-string-regexp'
-import { Map, TileLayer, Marker, Popup, Tooltip } from 'react-leaflet';
+import { Map, TileLayer, Marker, Popup, ZoomControl } from 'react-leaflet';
 import { locations } from './restaurantList'
 import MapDetail from './MapDetail'
 import './App.css';
@@ -23,6 +23,7 @@ class App extends Component {
         currentPosition: Set the current position of the map (downtown Tracy); array
         alertType: Alert type (success, error, warning, info); string
         alertMessage: Alert message/detail; string
+        sidebar: Toggles sidebar open/close; boolean
   */
   state = {
     selectedRestaurant: {},
@@ -36,7 +37,8 @@ class App extends Component {
     selected: false,
     currentPosition: [37.7383176, -121.4291585],
     alertType: '',
-    alertMessage: ''
+    alertMessage: '',
+    sidebar: true
   }
   // Reset the map marker selection
   resetMap = () => {
@@ -46,6 +48,14 @@ class App extends Component {
   resetSelection = () => {
     this.setState({ selectedRestaurantInfo: {}, loaded: false, alertMessage: '' })
   }
+  // toggle sidebar
+  toggleSidebar = () => {
+    if (this.state.sidebar) {
+      this.setState({sidebar: false})
+    } else {
+      this.setState({sidebar: true})
+    }
+  }
   // Update the search query and search for restaurants
   updateQuery = (query) => {
     this.setState({ query })
@@ -53,18 +63,13 @@ class App extends Component {
         const match = new RegExp(escapeRegExp(query), 'i')
         let searchedLocation = this.state.locations.filter((location) => match.test(location.name) || match.test(location.tags))
         this.setState({result: searchedLocation, noResult: false, selected: false})
-        // update location state
-    /*    this.state.result.map(location => {
-          L.marker([location.location.lat, location.location.lng]).addTo(this.map).bindPopup().openPopup();
-        }) */
       } else {
-        //let searchedLocation = this.props.locations
         this.setState({result: [], noResult: true, selected: false})
       }
     }
   // Updates the marker selection down to a specific restaurant, then centers the map towards that marker
   updateSelectedRestaurant = (data) => {
-    this.setState({selectedRestaurant: data, selected: true, loaded: false, currentPosition: data.location}, () => {console.log(this.state.selectedRestaurant)})
+    this.setState({selectedRestaurant: data, selected: true, loaded: false, currentPosition: data.location})
   }
   // Fetch the restaurant via Foursquare API
   fetchRestaurant = (id) => {
@@ -75,16 +80,12 @@ class App extends Component {
         this.setState({loaded: true})
       } else {
         // its loaded, set state so content can load
-        this.setState({loaded: false, alertType: 'error', alertMessage: 'Unable to fetch FourSquare Info, check console log for more information'})
+        this.setState({loaded: false, alertType: 'error', alertMessage: 'Unable to fetch FourSquare Info'})
       }
     })
   }
-  getInfo() {
-    console.log(this.state.selectedRestaurantInfo.response.venue.name);
-  }
   render() {
-    const { selectedRestaurant, locations, query, result, noResult, selected, currentPosition, selectedRestaurantInfo, loaded, alert, alertMessage } = this.state
-    console.log(locations)
+    const { selectedRestaurant, sidebar, locations, query, result, noResult, selected, currentPosition, selectedRestaurantInfo, loaded, alertMessage } = this.state
     let mapInfo;
     // if we have data loaded, then lets get the details :D
     if (loaded) {
@@ -104,37 +105,46 @@ class App extends Component {
       )
     }
     return (
-      <div className="App">
+      <div>
+        {!sidebar && (
+        <button type="button" className="btn btn-outline-dark map-toggle" tabIndex="1" onClick={(event) => this.toggleSidebar()}>Toggle Menu</button>
+        )}
+        {sidebar && (
         <nav className="sidebar">
+          <button type="button" className="btn btn-outline-primary btn-block" tabIndex="3" onClick={(event) => this.toggleSidebar()}>Toggle Menu</button>
           <div className="sidebar-header">
             <h1 className="logo">Downtown Tracy Eats</h1>
           </div>
-          <input type="text" className="form-control search-form" placeholder="Search" value={query}
+          <input type="text" className="form-control search-form" placeholder="Search" tabIndex="1" value={query}
               onChange={(event) => this.updateQuery(event.target.value)} onClick={(event) => this.resetMap()}/>
             {result.length > 0 && (
             <ul className="list-unstyled components results">
               {result.map((location) => (
-              <li key={location.foursquareId}><a href="#" onClick={(event) => this.updateSelectedRestaurant(location)}>{location.name}</a></li>
+              <li key={location.foursquareId}><button tabIndex="2" onClick={(event) => this.updateSelectedRestaurant(location)}>{location.name}</button></li>
               ))}
             </ul>
           )}
           {noResult &&
             <ul className="list-unstyled components results">
               {locations.map((location) =>
-                <li key={location.foursquareId}><a href="#" onClick={(event) => this.updateSelectedRestaurant(location)}>{location.name}</a></li>
+                <li key={location.foursquareId}><button tabIndex="2" onClick={(event) => this.updateSelectedRestaurant(location)}>{location.name}</button></li>
               )}
             </ul>
             }
             {result.length === 0 && !noResult && (
-              <ul className="list-unstyled components results">
+              <ul className="list-unstyled components results" tabIndex="2" >
               <li>No results</li>
               </ul>
           )}
         </nav>
+        )}
         <Map
           center={currentPosition}
           zoom={16}
+          onClick={(event) => this.resetMap()}
+          zoomControl={false}
           >
+          <ZoomControl position="topright"/>
           <TileLayer
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
@@ -153,8 +163,8 @@ class App extends Component {
           </Popup>
         </Marker>
         )}
-        {selected && Object.keys(selectedRestaurant).map(() =>
-          <Marker position={selectedRestaurant.location} onClick={(event) => this.fetchRestaurant(selectedRestaurant.foursquareId)}>
+        {selected && (
+          <Marker key={`marker-${selectedRestaurant.foursquareId}`} position={selectedRestaurant.location} onClick={(event) => this.fetchRestaurant(selectedRestaurant.foursquareId)}>
           <Popup className="popup-content" id={selectedRestaurant.foursquareId} key={`popup-${selectedRestaurant.foursquareId}`}>
             { mapInfo }
           </Popup>

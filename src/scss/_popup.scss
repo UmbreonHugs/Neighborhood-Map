@@ -4,3 +4,8 @@
 .leaflet-fade-anim .leaflet-popup {
   transition: none;
 }
+@media (max-width: 740px) {
+.popup-content {
+  width: 300px;
+}
+}

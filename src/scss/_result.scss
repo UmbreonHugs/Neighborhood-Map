@@ -2,5 +2,18 @@
   li {
     padding: 15px;
     border-bottom: 1px solid #555;
+    button {
+      color: $font-color;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      display: block;
+      margin: 0;
+      padding: 0;
+    }
+    button:hover, button:focus {
+      text-decoration: underline;
+      color: $primary-color;
+    }
   }
 }

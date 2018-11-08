@@ -1,10 +1,19 @@
 .sidebar {
-  background-color: $background-color;
-  min-width: 320px;
-  max-width: 320px;
+  background-color: rgba($background-color, 0.90);
+  position: absolute;
+  width: 300px;
   color: $font-color;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: auto;
   z-index: 1000;
+}
+.off {
+  display: none;
+}
+.map-toggle {
+  position: absolute;
+  top: 0;
+  z-index: 999;
 }
 .logo {
   font-size: 32px;
@@ -12,4 +21,10 @@
   color: $primary-color;
   text-align: center;
   padding: 10px;
+}
+@media (max-width: 740px) {
+  .sidebar {
+    background-color: rgba($background-color, 0.90);
+    width: 210px;
+  }
 }
