@@ -19,5 +19,9 @@ https://umbreonhugs.github.io/neighborhood-map-live/
 
 # Resources
 - Uses the Bootstrap 4 Framework for theme and responsiveness (https://getbootstrap.com/)
-- Uses Leaflet.JS to generate the map (https://leafletjs.com/)
-- Uses FourSquare to gather data and useful information about the restaurants (https://foursquare.com)
+- Uses Leaflet.JS to generate the map (https://leafletjs.com/) and the react-leaflet plugin for React (https://react-leaflet.js.org/)
+- Uses FourSquare to gather data and useful information about the restaurants (https://foursquare.com) and its API
+
+## Credits
+- PostMan for helping me understand the JSON structure for the FourSquare API (https://www.getpostman.com/)
+- Thank you for the amazing help, documentation, and support from the Udacity Team and its mentors! :)
