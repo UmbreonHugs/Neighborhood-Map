@@ -1,5 +1,6 @@
 {
   "name": "neighborhood-map",
+  "homepage": "https://umbreonhugs.github.io/neighborhood-map-live/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
