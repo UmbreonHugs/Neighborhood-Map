@@ -1,7 +1,7 @@
 const url = 'https://api.foursquare.com'
-const CLIENT_ID = 'CX5YHC2KT4US3CNEUCVJRLQ1Z4TNTKP2IYKCPJFNNHWW3EWH'
-const CLIENT_SECRET = 'OQU5CNIMZAEM51Y5KNQIPH0T0IPNA4XBDWG200ZFBODOUDAZ'
-const VERSION = '20181105'
+const CLIENT_ID = '' // client ID here
+const CLIENT_SECRET = '' // client secret here
+const VERSION = '' // today's date
 
 // Fetches data from FourSquare
 export const getRestaurant = (id) =>
